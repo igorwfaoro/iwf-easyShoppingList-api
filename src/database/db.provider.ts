@@ -10,14 +10,12 @@ export class DbProvider<T extends Entity> {
         private _dataName: string
     ) { }
 
-    public findAll(options: { [key: string]: any } = {}): T[] {
-        return this.getData()
-            .filter(x => Object.entries(options) ? Object.entries(options).every(opt => x[opt[0]] == opt[1]) : true);
+    public findAll(validation?: (item: T) => boolean): T[] {
+        return this.getData().filter(validation || (() => true));
     }
 
     public save(item: T): T {
         const data = this.getData();
-
         const index = data.findIndex(x => x.id);
 
         if (index)
@@ -30,9 +28,12 @@ export class DbProvider<T extends Entity> {
         return item;
     }
 
-    public findOne(options: { [key: string]: any }): T {
-        return this.getData()
-            .find(x => Object.entries(options).every(opt => x[opt[0]] == opt[1]));
+    public destroy(id: string): void {
+        this.setData(this.getData().filter(x => x.id != id));
+    }
+
+    public findOne(validation: (item: T) => boolean): T {
+        return this.getData().find(validation || (() => true));
     }
 
     public findById(id: string): T {
