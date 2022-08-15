@@ -16,7 +16,7 @@ export class DbProvider<T extends Entity> {
 
     public save(item: T): T {
         const data = this.getData();
-        const index = data.findIndex(x => x.id);
+        const index = data.findIndex(x => x.id == item.id);
 
         if (index >= 0)
             data[index] = item;
