@@ -4,6 +4,7 @@ import { ShoppingListItemViewModel } from "../models/view-models/shopping-list-i
 import { ShoppingListItemCreateInputModel } from '../models/input-models/shopping-list-item-create.input-model';
 import { ShoppingListItemCreateUpdateModel } from "../models/input-models/shopping-list-item-update.input-model";
 import { ShoppingListItemIndexesInputModel } from "../models/input-models/shopping-list-item-indexes.input-model";
+import { NotFoundException } from "../common/exceptions/not-found.exception";
 
 @injectable()
 export class ShoppingListItemService {
@@ -15,6 +16,10 @@ export class ShoppingListItemService {
 
     public getById(id: string): ShoppingListItemViewModel {
         const item = ShoppingListItem.getDb().findById(id);
+
+        if (!item)
+            throw new NotFoundException();
+
         return ShoppingListItemViewModel.fromEntity(item);
     }
 
@@ -35,20 +40,34 @@ export class ShoppingListItemService {
     public update(id: string, input: ShoppingListItemCreateUpdateModel): ShoppingListItemViewModel {
 
         const item = ShoppingListItem.getDb().findById(id);
+
+        if (!item)
+            throw new NotFoundException();
+
         item.description = input.description;
+
         ShoppingListItem.getDb().save(item);
 
         return ShoppingListItemViewModel.fromEntity(item);
     }
 
     public delete(id: string): void {
+        
+        if (!ShoppingListItem.getDb().exists(x => x.id == id))
+            throw new NotFoundException();
+
         ShoppingListItem.getDb().destroy(id);
     }
 
     public updateChecked(id: string, value: boolean): ShoppingListItemViewModel {
-        
+
         const item = ShoppingListItem.getDb().findById(id);
+
+        if (!item)
+            throw new NotFoundException();
+
         item.checked = value;
+        
         ShoppingListItem.getDb().save(item);
 
         return ShoppingListItemViewModel.fromEntity(item);
