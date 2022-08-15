@@ -25,6 +25,15 @@ ShoppingListItemsController.get('/:id', [checkApiKey], (req: Request, res: Respo
     }
 });
 
+ShoppingListItemsController.post('/', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const item = shoppingListItemService.create(req.body);
+        res.json(item);
+    } catch (error) {
+        next(error);
+    }
+});
+
 ShoppingListItemsController.put('/:id', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         const item = shoppingListItemService.update(req.params.id, req.body);
