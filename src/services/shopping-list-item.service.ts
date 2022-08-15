@@ -34,7 +34,7 @@ export class ShoppingListItemService {
 
         ShoppingListItem.getDb().save(item);
 
-        return ShoppingListItemViewModel.fromEntity(item);
+        return this.getById(item.id);
     }
 
     public update(id: string, input: ShoppingListItemCreateUpdateModel): ShoppingListItemViewModel {
@@ -48,7 +48,7 @@ export class ShoppingListItemService {
 
         ShoppingListItem.getDb().save(item);
 
-        return ShoppingListItemViewModel.fromEntity(item);
+        return this.getById(item.id);
     }
 
     public delete(id: string): void {
@@ -67,10 +67,10 @@ export class ShoppingListItemService {
             throw new NotFoundException();
 
         item.checked = value;
-        
+
         ShoppingListItem.getDb().save(item);
 
-        return ShoppingListItemViewModel.fromEntity(item);
+        return this.getById(item.id);
     }
 
     public updateIndexes(input: ShoppingListItemIndexesInputModel): ShoppingListItemViewModel[] {
@@ -82,6 +82,6 @@ export class ShoppingListItemService {
             ShoppingListItem.getDb().save(item);
         });
 
-        return items.map(ShoppingListItemViewModel.fromEntity);
+        return ShoppingListItem.getDb().findAll(x => items.map(y => y.id).includes(x.id)).map(ShoppingListItemViewModel.fromEntity);
     }
 }
