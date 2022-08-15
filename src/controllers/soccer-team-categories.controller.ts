@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
+import { checkApiKey } from "../middlewares/check-api-key";
 import { ServicesCollection } from "../providers";
 import { ShoppingListItemService } from "../services/shopping-list-item.service";
 
@@ -6,7 +7,7 @@ const ShoppingListItemsController = Router();
 
 const shoppingListItemService = ServicesCollection.resolve(ShoppingListItemService);
 
-ShoppingListItemsController.get('/', (req: Request, res: Response, next: NextFunction) => {
+ShoppingListItemsController.get('/', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         const items = shoppingListItemService.getAll();
         res.json(items);
@@ -15,7 +16,7 @@ ShoppingListItemsController.get('/', (req: Request, res: Response, next: NextFun
     }
 });
 
-ShoppingListItemsController.get('/:id', (req: Request, res: Response, next: NextFunction) => {
+ShoppingListItemsController.get('/:id', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         const item = shoppingListItemService.getById(req.params.id);
         res.json(item);
@@ -24,7 +25,7 @@ ShoppingListItemsController.get('/:id', (req: Request, res: Response, next: Next
     }
 });
 
-ShoppingListItemsController.put('/:id', (req: Request, res: Response, next: NextFunction) => {
+ShoppingListItemsController.put('/:id', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         const item = shoppingListItemService.update(req.params.id, req.body);
         res.json(item);
@@ -33,7 +34,7 @@ ShoppingListItemsController.put('/:id', (req: Request, res: Response, next: Next
     }
 });
 
-ShoppingListItemsController.delete('/:id', (req: Request, res: Response, next: NextFunction) => {
+ShoppingListItemsController.delete('/:id', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         shoppingListItemService.delete(req.params.id);
         res.send();
@@ -42,7 +43,7 @@ ShoppingListItemsController.delete('/:id', (req: Request, res: Response, next: N
     }
 });
 
-ShoppingListItemsController.patch('/:id/check', (req: Request, res: Response, next: NextFunction) => {
+ShoppingListItemsController.patch('/:id/check', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         const item = shoppingListItemService.updateChecked(req.params.id, true);
         res.json(item);
@@ -51,7 +52,7 @@ ShoppingListItemsController.patch('/:id/check', (req: Request, res: Response, ne
     }
 });
 
-ShoppingListItemsController.patch('/:id/uncheck', (req: Request, res: Response, next: NextFunction) => {
+ShoppingListItemsController.patch('/:id/uncheck', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         const item = shoppingListItemService.updateChecked(req.params.id, false);
         res.json(item);

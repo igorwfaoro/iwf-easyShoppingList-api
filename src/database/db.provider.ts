@@ -33,11 +33,15 @@ export class DbProvider<T extends Entity> {
     }
 
     public findOne(validation: (item: T) => boolean): T {
-        return this.getData().find(validation || (() => true));
+        return this.getData().find(validation);
     }
 
     public findById(id: string): T {
         return this.getData().find(x => x.id == id);
+    }
+
+    public exists(validation: (item: T) => boolean): boolean {
+        return !!this.getData().find(validation || (() => true));
     }
 
     private getData(): T[] {
