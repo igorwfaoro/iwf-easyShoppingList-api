@@ -18,7 +18,7 @@ export class DbProvider<T extends Entity> {
         const data = this.getData();
         const index = data.findIndex(x => x.id);
 
-        if (index)
+        if (index >= 0)
             data[index] = item;
         else
             data.push(item);
@@ -28,8 +28,12 @@ export class DbProvider<T extends Entity> {
         return item;
     }
 
-    public destroy(id: string): void {
+    public destroyById(id: string): void {
         this.setData(this.getData().filter(x => x.id != id));
+    }
+
+    public destroy(validation: (item: T) => boolean): void {
+        this.setData(this.getData().filter(x => !validation(x)))
     }
 
     public findOne(validation: (item: T) => boolean): T {

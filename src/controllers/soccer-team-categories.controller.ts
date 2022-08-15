@@ -43,6 +43,15 @@ ShoppingListItemsController.put('/:id', [checkApiKey], (req: Request, res: Respo
     }
 });
 
+ShoppingListItemsController.delete('/clear', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
+    try {
+        shoppingListItemService.clear();
+        res.send();
+    } catch (error) {
+        next(error);
+    }
+});
+
 ShoppingListItemsController.delete('/:id', [checkApiKey], (req: Request, res: Response, next: NextFunction) => {
     try {
         shoppingListItemService.delete(req.params.id);

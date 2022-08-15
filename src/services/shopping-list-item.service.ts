@@ -52,11 +52,11 @@ export class ShoppingListItemService {
     }
 
     public delete(id: string): void {
-        
+
         if (!ShoppingListItem.getDb().exists(x => x.id == id))
             throw new NotFoundException();
 
-        ShoppingListItem.getDb().destroy(id);
+        ShoppingListItem.getDb().destroyById(id);
     }
 
     public updateChecked(id: string, value: boolean): ShoppingListItemViewModel {
@@ -83,5 +83,9 @@ export class ShoppingListItemService {
         });
 
         return ShoppingListItem.getDb().findAll(x => items.map(y => y.id).includes(x.id)).map(ShoppingListItemViewModel.fromEntity);
+    }
+
+    public clear(): void {
+        ShoppingListItem.getDb().destroy(() => true);
     }
 }
