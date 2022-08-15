@@ -51,6 +51,6 @@ export class DbProvider<T extends Entity> {
     private setData(data: T[]): void {
         const oldData = JSON.parse(fs.readFileSync(DB_FILE_PATH, 'utf-8'));
         oldData[this._dataName] = data;
-        fs.writeFileSync(DB_FILE_PATH, JSON.stringify(oldData, null, 2), 'utf-8');
+        fs.writeFileSync(DB_FILE_PATH, JSON.stringify(oldData, null, 2), { encoding: 'utf-8', mode: 0o777 });
     }
 }
