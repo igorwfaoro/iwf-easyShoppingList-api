@@ -20,6 +20,7 @@ export class ShoppingListItem extends Entity {
         entity.id = uuidV4();
         entity.index = params.index;
         entity.description = params.description;
+        entity.checked = false;
         entity.createdAt = moment().toDate();
 
         return entity;
